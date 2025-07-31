@@ -37,7 +37,8 @@ RUN pip install --no-cache-dir \
 RUN conda install -y dgl-cuda11.1 -c defaults -c dglteam -c pytorch
 RUN cd /app/RFdiffusion/env/SE3Transformer/ && python setup.py install
 RUN cd /app/RFdiffusion/ && pip install -e .
-RUN cd /app/RFdiffusion/ && mkdir models && cd models && wget http://files.ipd.uw.edu/pub/RFdiffusion/e29311f6f1bf1af907f9ef9f44b8328b/Complex_base_ckpt.pt
+RUN cd /app/RFdiffusion/ && mkdir models && cd models && wget http://files.ipd.uw.edu/pub/RFdiffusion/e29311f6f1bf1af907f9ef9f44b8328b/Complex_base_ckpt.pt && wget http://files.ipd.uw.edu/pub/RFdiffusion/60f09a193fb5e5ccdc4980417708dbab/Complex_Fold_base_ckpt.pt
+RUN cd /app/RFdiffusion/examples/ && tar -xvf ppi_scaffolds_subset.tar.gz
 # Setup ProteinMPNN env
 RUN conda install -y pyrosetta -c https://conda.graylab.jhu.edu
 RUN cd dl_binder_design/mpnn_fr/ && git clone https://github.com/dauparas/ProteinMPNN.git
