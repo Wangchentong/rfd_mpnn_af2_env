@@ -42,10 +42,10 @@ ENV PIP_TIMEOUT=1000
 ENV PIP_RETRIES=10
 RUN pip install --no-cache-dir numpy==1.24.3 pyrsistent hydra-core
 RUN pip install --no-cache-dir torch==1.13.0+cu116 --extra-index-url https://download.pytorch.org/whl/cu116
-RUN pip install --no-cache-dir e3nn
+RUN pip install --no-cache-dir e3nn icecream
 RUN mamba install -y dgl-cuda11.6 -c dglteam
 RUN cd /app/RFdiffusion/env/SE3Transformer/ && python setup.py install
-RUN cd /app/RFdiffusion/ && pip install -e .
+RUN cd /app/RFdiffusion/ && git checkout 0d629aa6720599200296a7c9e9ec9d7b924c888e && pip install -e .
 RUN cd /app/RFdiffusion/ && mkdir models && cd models && wget http://files.ipd.uw.edu/pub/RFdiffusion/e29311f6f1bf1af907f9ef9f44b8328b/Complex_base_ckpt.pt && wget http://files.ipd.uw.edu/pub/RFdiffusion/60f09a193fb5e5ccdc4980417708dbab/Complex_Fold_base_ckpt.pt
 RUN cd /app/RFdiffusion/examples/ && tar -xvf ppi_scaffolds_subset.tar.gz
 # Setup ProteinMPNN env
@@ -53,10 +53,12 @@ RUN mamba install -y pyrosetta -c https://conda.graylab.jhu.edu
 RUN cd dl_binder_design/mpnn_fr/ && git clone https://github.com/dauparas/ProteinMPNN.git
 # Setup Alphafold2 env
 RUN mamba install -y ml-collections ml_dtypes tensorflow mock -c conda-forge
-RUN pip install --no-cache-dir dm-haiku==0.0.4 dm-tree==0.1.6 jax==0.4.13 jaxlib==0.4.13+cuda11.cudnn86 biopython==1.79 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-RUN pip install --no-cache-dir scipy==1.15.2
+RUN pip install --no-cache-dir dm-haiku==0.0.4 dm-tree==0.1.6 jax==0.3.17 jaxlib==0.3.15+cuda11.cudnn805 biopython==1.79 -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+RUN pip install --no-cache-dir scipy==1.12.0
+RUN pip uninstall numpy && pip uninstall numpy && pip install numpy==1.26.4
 RUN mkdir -p dl_binder_design/af2_initial_guess/model_weights/params && \ 
     cd dl_binder_design/af2_initial_guess/model_weights/params && \ 
     wget https://storage.googleapis.com/alphafold/alphafold_params_2022-12-06.tar && \ 
     tar --extract --verbose --file=alphafold_params_2022-12-06.tar
+RUN cp /app/rfd_mpnn_af2_env/input /root/
 CMD ["/bin/bash"]
